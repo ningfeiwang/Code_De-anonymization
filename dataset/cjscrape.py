@@ -1,3 +1,6 @@
+#!/usr/local/bin/python
+# coding:utf-8
+
 from urllib import urlopen
 from urllib import urlretrieve
 import json
@@ -6,30 +9,6 @@ import os
 import zipfile
 import shutil
 import multiprocessing
-
-#
-# Scrapes Google Code Jam data, and extracts the C/C++/Python source files.
-#
-# The directory structure and naming convention of the data is as follows:
-#
-# ./codejamdata/ |--> c/   | --> username0 | --> p[problem_number].[user_name]0.c
-#                |         |               | --> p2453486.Bob0.c
-#                |         |               | --> etc...
-#                |         |
-#                |         | --> name0     | --> etc...
-#                |         |               | --> etc...
-#                |         |               | --> etc...
-#                |         |
-#                |         | --> another0  | --> etc...
-#                |                         | --> etc...
-#                |
-#                |--> cpp/ | --> etc...    | --> etc...
-#                |         |               | --> etc...             
-#                |         |
-#                |         | --> etc...    | --> etc...
-#                |
-#                |--> py/  | --> etc...    | --> etc...
-#
 
 # returns the URL to download the user submission
 def get_download_url(round_id, problem_id, username):
