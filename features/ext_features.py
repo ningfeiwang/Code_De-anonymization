@@ -18,7 +18,7 @@ def readfile(filename):
 
 def writefeatures(label,features):
 	name = label.split(".")[0] + ".txt"
-	f = open(os.path.join("features",name), 'a')
+	f = open(os.path.join("trainingfeature",name), 'a')
 	for i in range(0,len(features)):
 		f.write(str(features[i]))
 		f.write(",")
@@ -98,7 +98,11 @@ def detect_lang(name_list):
 			for t in range(0, len(det_lan)):
 				result[each] += language[det_lan[t]]
 		print result
-		writefeatures(each,[math.log(float(result[each]))])
+		if result[each] != 0:
+			writefeatures(each,[math.log(float(result[each]))])
+		else:
+			writefeatures(each,[float(result[each])])
+
 
 def nums_function(name_list):
 	nums = {}
@@ -106,7 +110,10 @@ def nums_function(name_list):
 		data = readfile(os.path.join(path,each))
 		nums[each] = data.count("def")
 		print nums
-		writefeatures(each,[math.log(float(nums[each]))])
+		if nums[each] != 0:
+			writefeatures(each,[math.log(float(nums[each]))])
+		else:
+			writefeatures(each,[float(nums[each])])
 
 def nums_lenline(name_list):
 	lenline = {}
@@ -154,18 +161,25 @@ def comment_len(name_list):
 			for j in range(0,len(line)):
 				if line[j] != " ":
 					l += 1 
+		if k == 0:
+			k = 1
+		if com == 0:
+			com = 1
 		comment[each] = [float(l/k), math.log(float(k/com))]
 		print comment
 		writefeatures(each, comment[each])
 
+# def check_space(name_list):
+
+
 
 if __name__ == '__main__':
 	global path
-	path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/features/data_sum'
+	path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/training'
 	name_list = get_name(path)
-	# keywords(name_list)
-	# detect_lang(name_list)
-	# nums_function(name_list)
-	# nums_lenline(name_list)
-	# comment_len(name_list)
+	keywords(name_list)
+	detect_lang(name_list)
+	nums_function(name_list)
+	nums_lenline(name_list)
+	comment_len(name_list)
 	

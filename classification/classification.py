@@ -6,6 +6,7 @@ import model
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.decomposition import PCA
+import numpy as np
 
 def pca_list(x, var):
 	res = []
@@ -28,7 +29,11 @@ def readfile(filename):
 
 def get_data(path, x, y, label):
 	name_list = get_name(path)
-
+	data1 = readfile(os.path.join(path, name_list[0]))
+	data1 = data1.split(",")
+	# print data
+	data1.pop()
+	ori = len(data1)
 	for each in name_list:
 		if each == ".DS_Store":
 			continue
@@ -36,12 +41,17 @@ def get_data(path, x, y, label):
 		data = data.split(",")
 		# print data
 		data.pop()
-		data.pop(33)
+		l = len(data)
+		# data.pop(33)
 		for k in range(0, len(data)):
 			data[k] = float(data[k])
 			# trainx.append()
-		x.append(data)
-		y.append([label[each]])
+		if l == ori:
+			x.append(data)
+			a = each.split("_")[0]
+			y.append([label[a]])
+	# print len(x)
+	# print y
 		# print data
 
 
@@ -56,23 +66,62 @@ if __name__ == '__main__':
 	trainy = []
 	label = dict()
 	name_list = get_name(path_train)
+	p = 0
 	for i in range(0,len(name_list)):
 		if name_list[i] == ".DS_Store":
 			continue
-		label[name_list[i]] = i
+		a = name_list[i].split("_")[0]
+		if a in label.keys():
+			continue
+
+		label[a] = p
+		p += 1
+	# print len(label)
 	get_data(path_train, trainx, trainy, label)
-	# print trainx
+	# l1 = ['b','c','d','b','c','a','a']
+	# ll = len(trainx[0])
+	# pp = []
+	# for i in range(0,len(trainx)):
+	# 	if ll != len(trainx[i]):
+	# 		# print i
+	# 		# print trainx[i]
+	# 		pp.append(i)
+	# print pp
+	# for kkk in pp:
+	# 	trainx.pop(kkk - 1)
+	# 	trainy.pop(kkk - 1)
+	# l2 = []
+	# for i in trainy:
+	# 	if i not in l2:
+	# 		l2.append(i)
+	# print len(l2)
+	
 
 	# print trainy
 	get_data(path_test, testx, testy, label)
+	# ll = len(testx[0])
+	# pp = []
+	# for i in range(0,len(testx)):
+	# 	if ll != len(testx[i]):
+	# 		# print i
+	# 		# print trainx[i]
+	# 		pp.append(i)
+	# print pp
+	# for kkk in pp:
+	# 	testx.pop(kkk - 1)
+	# 	testy.pop(kkk - 1)
 
-
-	var = PCA(n_components=37, copy=True, 
-	whiten=False, svd_solver='auto', 
-	tol=0.0, iterated_power='auto', random_state=None).fit(trainx).explained_variance_ratio_
-	# print len(var)
-	trainx = pca_list(trainx,var)
-	testx = pca_list(testx, var)
+	# print label
+	# testx = np.array(testx)
+	# trainx = np.array(trainx)
+	# testy = np.array(testy)
+	# trainy = np.array(trainy)
+	# var = PCA(n_components=38, copy=True, 
+	# whiten=False, svd_solver='auto', 
+	# tol=0.0, iterated_power='auto', random_state=None).fit(trainx).explained_variance_ratio_
+	# # print len(var)
+	# trainx = pca_list(trainx,var)
+	# testx = pca_list(testx, var)
 	# print (len(trainx[0]))
 
 
@@ -107,6 +156,7 @@ if __name__ == '__main__':
 	trainx = []
 	for i in range(0,len(trainy)):
 		trainx.append([res11[i], res21[i],res31[i],res41[i],res51[i]])
+	for i in range(0, len(testy)):
 		testx.append([res12[i], res22[i],res32[i],res42[i],res52[i]])
 
 
