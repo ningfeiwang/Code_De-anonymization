@@ -34,8 +34,9 @@ def get_data(path, x, y, label):
 		data = data.split(",")
 		# print data
 		data.pop()
+		# if len(data) >= 33:
+		# 	data.pop(33)
 		l = len(data)
-		# data.pop(33)
 		for k in range(0, len(data)):
 			data[k] = float(data[k])
 			# trainx.append()
@@ -66,7 +67,7 @@ def main(X_train, y_train, X_test, y_test):
 
 	# design model
 	model = Sequential()
-	model.add(Dense(400, input_dim = 38, activation ='relu'))
+	model.add(Dense(400, input_dim = 41, activation ='relu'))
 	model.add(Dropout(0.2))
 	model.add(Dense(300, input_dim = 400, activation ='relu'))
 	model.add(Dropout(0.2))
@@ -84,7 +85,7 @@ def main(X_train, y_train, X_test, y_test):
 	model.compile(loss ='categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
 
 	# Fit the model
-	his = model.fit(X_train, y_train, validation_data = (X_test, y_test), epochs = 20, batch_size =100, verbose = 2)
+	his = model.fit(X_train, y_train, validation_data = (X_test, y_test), epochs = 20, batch_size =10, verbose = 2)
 	# Final evaluation of the model
 	# print (max(his.history['val_acc']))
 	# list_his.append(max(his.history['val_acc']))
@@ -120,8 +121,8 @@ if __name__ == '__main__':
 	print (p)
 	# print len(label)
 	get_data(path_train, trainx, trainy, label)
-	print (len(trainx))
-	print (len(trainx[0]))
+	# print (len(trainx))
+	# print (len(trainx[0]))
 	get_data(path_test, testx, testy, label)
 
 	main(trainx,trainy,testx,testy)
