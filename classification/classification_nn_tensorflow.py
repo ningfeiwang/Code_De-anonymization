@@ -85,7 +85,7 @@ def main(X_train, y_train, X_test, y_test):
 	model.compile(loss ='categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
 
 	# Fit the model
-	his = model.fit(X_train, y_train, validation_data = (X_test, y_test), epochs = 20, batch_size =10, verbose = 2)
+	his = model.fit(X_train, y_train, validation_data = (X_test, y_test), epochs = 40, batch_size =100, verbose = 2)
 	# Final evaluation of the model
 	# print (max(his.history['val_acc']))
 	# list_his.append(max(his.history['val_acc']))
