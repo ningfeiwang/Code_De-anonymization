@@ -18,7 +18,10 @@ def readfile(filename):
 
 def writefeatures(label,features):
 	name = label.split(".")[0] + ".txt"
-	f = open(os.path.join("testingfeature",name), 'a')
+	if "training" in path:
+		f = open(os.path.join("trainingfeature",name), 'a')
+	if "testing" in path:
+		f = open(os.path.join("testingfeature",name), 'a')
 	for i in range(0,len(features)):
 		f.write(str(features[i]))
 		f.write(",")
@@ -135,22 +138,22 @@ def nums_lenline(name_list):
 			for j in range(0,len(line)):
 				if line[j] != " ":
 					l += 1 
-		q = float(l/k)
-		l = 0
-		k = 0
-		lk = 0
-		for i in range(0, len(lines_f)):
-			if "#" in lines_f[i]:
-				lines_f[i] = lines_f[i].split("#")[0]
-			if lines_f[i] == "":
-				continue
-			k += 1
-			line = lines_f[i].split(" ")
-			for j in range(0,len(line)):
-				if line[j] != " ":
-					l += 1
-			lk += (l - q) ** 2
-		lk = lk/k
+		# q = float(l/k)
+		# l = 0
+		# k = 0
+		# lk = 0
+		# for i in range(0, len(lines_f)):
+		# 	if "#" in lines_f[i]:
+		# 		lines_f[i] = lines_f[i].split("#")[0]
+		# 	if lines_f[i] == "":
+		# 		continue
+		# 	k += 1
+		# 	line = lines_f[i].split(" ")
+		# 	for j in range(0,len(line)):
+		# 		if line[j] != " ":
+		# 			l += 1
+		# 	lk += (l - q) ** 2
+		# lk = lk/k
 		lenline[each] = [float(l/k)]
 		print lenline
 		writefeatures(each, lenline[each])
@@ -240,17 +243,96 @@ def empty_line(name_list):
 		else:
 			writefeatures(each, [float(k/l)])
 
+def import_num(name_list):
+	for each in name_list:
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		l = 0
+		k = 0
+		for i in range(0, len(lines_f)):
+			k += 1
+			if "#" in lines_f[i]:
+				if "import" in lines_f[i].split("#")[0]:
+					l += 1
+			else:
+				if "import" in lines_f[i]:
+					l += 1
+		if l == 0:
+			print [0]
+			writefeatures(each, [0])
+		else:
+			print l
+			writefeatures(each, [l])
+
+def coding(name_list):
+	for each in name_list:
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		flag1 = float(0)
+		flag2 = float(0)
+		flag3 = float(0)
+		for i in range(0, len(lines_f)):
+			if "UTF-8" in lines_f[i]:
+				flag1 = float(1)
+			if "#!/usr/bin/" in lines_f[i]:
+				flag2 = float(1)
+			if "python2" in lines_f[i]:
+				flag3 = float(1)
+			elif "python3" in lines_f[i]:
+				flag3 = float(2)
+		writefeatures(each, [flag1, flag2, flag3])
+
+def print_sty(name_list):
+	for each in name_list:
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		flag = float(0)
+		for i in range(0, len(lines_f)):
+			if "#" in lines_f[i]:
+				if "print" in lines_f[i].split("#")[0]:
+					if "(" not in lines_f[i].split("#")[0]:
+						if ")" not in lines_f[i].split("#")[0]:
+							flag = float(1)
+					if lines_f[i].split("#")[0].count("(") == 1:
+						flag = float(2)
+			else:
+				if "print" in lines_f[i]:
+					if "(" not in lines_f[i]:
+						if ")" not in lines_f[i]:
+							flag = float(1)
+					if lines_f[i].count("(") == 1:
+						flag = float(2)
+		print each
+		print flag
+		writefeatures(each, [flag])
 
 if __name__ == '__main__':
 	global path
-	path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/testing'
 	name_list = get_name(path)
-	keywords(name_list)
-	detect_lang(name_list)
-	nums_function(name_list)
-	nums_lenline(name_list)
-	comment_len(name_list)
-	check_space(name_list)
-	par_nums(name_list)
-	empty_line(name_list)
+	for i in range(0,2):
+		if i == 0:
+			path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/testing'
+		else:
+			path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/training'
 	
+		keywords(name_list)
+		detect_lang(name_list)
+		nums_function(name_list)
+		nums_lenline(name_list)
+		comment_len(name_list)
+		check_space(name_list)
+		par_nums(name_list)
+		empty_line(name_list)
+		import_num(name_list)
+		coding(name_list)
+		print_sty(name_list)
+		
