@@ -67,7 +67,7 @@ def main(X_train, y_train, X_test, y_test):
 
 	# design model
 	model = Sequential()
-	model.add(Dense(400, input_dim = 41, activation ='relu'))
+	model.add(Dense(400, input_dim = 50, activation ='relu'))
 	model.add(Dropout(0.2))
 	model.add(Dense(300, input_dim = 400, activation ='relu'))
 	model.add(Dropout(0.2))

@@ -6,6 +6,8 @@ import re
 import math
 from langdetect import detect
 from langdetect import detect_langs
+import time
+from ShowProcess import ShowProcess
 
 def get_name(filename):
 	name_list = os.listdir(filename)
@@ -33,8 +35,13 @@ def keywords(name_list):
 	key_word = readfile("python_keyword.txt")
 	key_word = key_word.split("\n")
 	fea = dict()
-
+	if "training" in path:
+		print "training keywords"
+	if "testing" in path:
+		print "testing keywords"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		for k in key_word:
@@ -53,7 +60,7 @@ def keywords(name_list):
 				else:
 					a = line.count(k)
 				fea[k] += a
-		print l
+		# print l
 		for k in fea.keys():
 			if fea[k] == 0:
 				fea[k] = 1
@@ -68,7 +75,13 @@ def detect_lang(name_list):
 	language = dict()
 	result = dict()
 	language["en"] = 0
+	if "training" in path:
+		print "training language"
+	if "testing" in path:
+		print "testing language"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		# lan = "a"
@@ -77,7 +90,7 @@ def detect_lang(name_list):
 		lines_f = f.readlines()
 		# print lines_f
 		f.close()
-		print each
+		# print each
 		for i in range(0,len(lines_f)):
 			if "#" in lines_f[i]:
 				a = lines_f[i].split("#")[-1]
@@ -100,7 +113,7 @@ def detect_lang(name_list):
 			result[each] = 0
 			for t in range(0, len(det_lan)):
 				result[each] += language[det_lan[t]]
-		print result
+		# print result
 		if result[each] != 0:
 			writefeatures(each,[math.log(float(result[each]))])
 		else:
@@ -109,10 +122,16 @@ def detect_lang(name_list):
 
 def nums_function(name_list):
 	nums = {}
+	if "training" in path:
+		print "training functions"
+	if "testing" in path:
+		print "testing functions"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		data = readfile(os.path.join(path,each))
 		nums[each] = data.count("def")
-		print nums
+		# print nums
 		if nums[each] != 0:
 			writefeatures(each,[math.log(float(nums[each]))])
 		else:
@@ -120,7 +139,13 @@ def nums_function(name_list):
 
 def nums_lenline(name_list):
 	lenline = {}
+	if "training" in path:
+		print "training lines length"
+	if "testing" in path:
+		print "testing lines length"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		f = open(os.path.join(path,each),'r')
@@ -155,12 +180,18 @@ def nums_lenline(name_list):
 		# 	lk += (l - q) ** 2
 		# lk = lk/k
 		lenline[each] = [float(l/k)]
-		print lenline
+		# print lenline
 		writefeatures(each, lenline[each])
 
 def comment_len(name_list):
 	comment = {}
+	if "training" in path:
+		print "training comment length"
+	if "testing" in path:
+		print "testing comment length"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		f = open(os.path.join(path,each),'r')
@@ -185,12 +216,18 @@ def comment_len(name_list):
 		if com == 0:
 			com = 1
 		comment[each] = [float(l/k), math.log(float(k/com))]
-		print comment
+		# print comment
 		writefeatures(each, comment[each])
 
 def check_space(name_list):
 	# space = dict()
+	if "training" in path:
+		print "training space between string"
+	if "testing" in path:
+		print "testing space between string"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		data = readfile(os.path.join(path,each))
@@ -206,7 +243,13 @@ def check_space(name_list):
 
 def par_nums(name_list):
 	# space = dict()
+	if "training" in path:
+		print "training parameter number"
+	if "testing" in path:
+		print "testing parameter number"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		f = open(os.path.join(path,each),'r')
@@ -226,7 +269,13 @@ def par_nums(name_list):
 			writefeatures(each, [float(k/l)])
 			# print 1
 def empty_line(name_list):
+	if "training" in path:
+		print "training empty lines"
+	if "testing" in path:
+		print "testing empty lines"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		f = open(os.path.join(path,each),'r')
@@ -244,7 +293,13 @@ def empty_line(name_list):
 			writefeatures(each, [float(k/l)])
 
 def import_num(name_list):
+	if "training" in path:
+		print "training import"
+	if "testing" in path:
+		print "testing import"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		f = open(os.path.join(path,each),'r')
@@ -261,14 +316,51 @@ def import_num(name_list):
 				if "import" in lines_f[i]:
 					l += 1
 		if l == 0:
-			print [0]
+			# print [0]
 			writefeatures(each, [0])
 		else:
-			print l
+			# print l
 			writefeatures(each, [l])
 
-def coding(name_list):
+def from_import(name_list):
+	if "training" in path:
+		print "training from import and import as"
+	if "testing" in path:
+		print "testing from import and import as"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		l = 0
+		p = 0
+		k = 0
+		for i in range(0, len(lines_f)):
+			k += 1
+			if "#" in lines_f[i]:
+				l += len(re.findall(r'from .* import .*', lines_f[i].split("#")[0]))
+				p += len(re.findall(r'import .* as .*', lines_f[i].split("#")[0]))
+			else:
+				l += len(re.findall(r'from .* import .*', lines_f[i]))
+				p += len(re.findall(r'import .* as .*', lines_f[i]))
+		if l == 0:
+			# print [0]
+			writefeatures(each, [0,0])
+		else:
+			# print l
+			writefeatures(each, [l,p])
+
+def coding(name_list):
+	if "training" in path:
+		print "training coding"
+	if "testing" in path:
+		print "testing coding"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		f = open(os.path.join(path,each),'r')
@@ -289,7 +381,13 @@ def coding(name_list):
 		writefeatures(each, [flag1, flag2, flag3])
 
 def print_sty(name_list):
+	if "training" in path:
+		print "training print style"
+	if "testing" in path:
+		print "testing print style"
+	process_bar = ShowProcess(len(name_list)-1)
 	for each in name_list:
+		process_bar.show_process()
 		if each == ".DS_Store":
 			continue
 		f = open(os.path.join(path,each),'r')
@@ -311,19 +409,68 @@ def print_sty(name_list):
 							flag = float(1)
 					if lines_f[i].count("(") == 1:
 						flag = float(2)
-		print each
-		print flag
+		# print each
+		# print flag
 		writefeatures(each, [flag])
+
+def test_function(name_list):
+	if "training" in path:
+		print "training test function"
+	if "testing" in path:
+		print "testing test function"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		flag = 0
+		for i in range(0, len(lines_f)):
+			if "if __name__ == '__main__'" in lines_f[i]:
+				flag = 1
+		writefeatures(each, [float(flag)])
+		# print flag
+
+def tab_spa(name_list):
+	if "training" in path:
+		print "training tab and space"
+	if "testing" in path:
+		print "testing tab and space"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		flag = 0
+		# print each
+		for i in range(0, len(lines_f)):
+			if ":" in lines_f[i]:
+				if "\t" in lines_f[i+1]:
+					flag = 1
+					break
+				else:
+					flag = 0
+					break
+		writefeatures(each, [float(flag)])
+
+		# print flag
 
 if __name__ == '__main__':
 	global path
-	name_list = get_name(path)
+	os.system("mkdir trainingfeature")
+	os.system("mkdir testingfeature")
+	
 	for i in range(0,2):
 		if i == 0:
 			path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/testing'
 		else:
 			path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/training'
-	
+		name_list = get_name(path)
 		keywords(name_list)
 		detect_lang(name_list)
 		nums_function(name_list)
@@ -333,6 +480,9 @@ if __name__ == '__main__':
 		par_nums(name_list)
 		empty_line(name_list)
 		import_num(name_list)
+		from_import(name_list)
 		coding(name_list)
 		print_sty(name_list)
+		test_function(name_list)
+		tab_spa(name_list)
 		
