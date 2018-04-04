@@ -8,6 +8,8 @@ from langdetect import detect
 from langdetect import detect_langs
 import time
 from ShowProcess import ShowProcess
+import ast
+import ast_visit
 
 def get_name(filename):
 	name_list = os.listdir(filename)
@@ -17,6 +19,13 @@ def readfile(filename):
 	with open(filename) as file:
 		data = file.read()
 	return data
+
+def get_length(filename):
+	f = open(os.path.join(path,filename),'r')
+	lines_f = f.readlines()
+	# print lines_f
+	f.close()
+	return len(lines_f)
 
 def writefeatures(label,features):
 	name = label.split(".")[0] + ".txt"
@@ -460,6 +469,58 @@ def tab_spa(name_list):
 
 		# print flag
 
+def ast_nodenums(name_list):
+	key_word = readfile("ast_nodetype.txt")
+	key_word = key_word.split("\n")
+	if "training" in path:
+		print "training ast node nums"
+	if "testing" in path:
+		print "testing ast node nums"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		try:
+			tree = ast.parse(open(os.path.join(path,each)).read())
+		except:
+			writefeatures(each, [float(0)])
+			for k in (0,len(key_word)):
+				writefeatures(each, [math.log(float(1))])
+			continue
+		x = ast_visit.visit()
+		x.visit(tree)
+		f = open("ast.txt",'r')
+		lines_f = f.readlines()
+		f.close()
+			# continue:
+
+
+		# print len(lines_f[0].split(","))
+		# print math.log(len(lines_f[0].split(",")))
+		# print len(lines_f[0].split(","))
+		writefeatures(each, [math.log(len(lines_f[0].split(",")))])
+		# print 111111
+		kk = get_length(each)
+		print kk
+		# break
+		os.system("rm ast.txt")
+		lines = lines_f[0].split(",")
+		for i in range(0,len(lines)):
+			for k in key_word:
+				lines.count(k)
+				if len(lines_f[0].split(",")) == 0:
+					writefeatures(each, [math.log(float(1))])
+				else:
+					# print kk 
+					# print len(lines_f[0].split(","))
+					# if kk > len(lines_f[0].split(",")):
+					# 	writefeatures(each, [float(0.1)])
+					# else:
+					writefeatures(each, [float(len(lines_f[0].split(","))/kk)])
+
+
+
 if __name__ == '__main__':
 	global path
 	os.system("mkdir trainingfeature")
@@ -472,7 +533,7 @@ if __name__ == '__main__':
 			path = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/training'
 		name_list = get_name(path)
 		keywords(name_list)
-		detect_lang(name_list)
+		# detect_lang(name_list)
 		nums_function(name_list)
 		nums_lenline(name_list)
 		comment_len(name_list)
@@ -485,4 +546,5 @@ if __name__ == '__main__':
 		print_sty(name_list)
 		test_function(name_list)
 		tab_spa(name_list)
+		ast_nodenums(name_list)
 		
