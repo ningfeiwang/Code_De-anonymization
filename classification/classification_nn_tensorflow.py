@@ -49,8 +49,6 @@ def get_data(path, x, y, label):
 		# print data
 def main(X_train, y_train, X_test, y_test):
 	num_classes = 75
-	# for i in range(0,len(X_train)):
-	# 	for j in range(0,len(X_train[0])):
 	# 		X_train[i][j] = int(X_train[i][j])
 	# for i in range(0,len(X_test)):
 	# 	for j in range(0,len(X_test[0])):
@@ -67,7 +65,7 @@ def main(X_train, y_train, X_test, y_test):
 
 	# design model
 	model = Sequential()
-	model.add(Dense(400, input_dim = 50, activation ='relu'))
+	model.add(Dense(400, input_dim = 57, activation ='relu'))
 	model.add(Dropout(0.2))
 	model.add(Dense(300, input_dim = 400, activation ='relu'))
 	model.add(Dropout(0.2))
@@ -80,12 +78,12 @@ def main(X_train, y_train, X_test, y_test):
 
 	# print out summary of the model
 	print(model.summary())
-
+	tensorboard = TensorBoard(log_dir='log', histogram_freq=0, write_graph=True, write_images=True)
 	# Compile model
 	model.compile(loss ='categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
-
+	
 	# Fit the model
-	his = model.fit(X_train, y_train, validation_data = (X_test, y_test), epochs = 40, batch_size =100, verbose = 2)
+	his = model.fit(X_train, y_train, validation_data = (X_test, y_test), epochs = 40, batch_size =100, verbose = 2, callbacks=[tensorboard])
 	# Final evaluation of the model
 	# print (max(his.history['val_acc']))
 	# list_his.append(max(his.history['val_acc']))
@@ -100,8 +98,8 @@ def main(X_train, y_train, X_test, y_test):
 if __name__ == '__main__':
 	# global testx, testy, trainx,trainy
 	# global path_train, path_test
-	path_train = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/trainingfeature'
-	path_test = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/testingfeature'
+	path_train = './trainingfeature'
+	path_test = './testingfeature'
 	testx = []
 	testy = []
 	trainx = []
