@@ -497,6 +497,7 @@ def ast_nodenums(name_list):
 		# print len(lines_f[0].split(","))
 		# print math.log(len(lines_f[0].split(",")))
 		# print len(lines_f[0].split(","))
+<<<<<<< HEAD
 		writefeatures(each, [math.log(float(len(lines_f[0].split(","))))])
 		# print 111111
 		kk = get_length(each)
@@ -516,6 +517,27 @@ def ast_nodenums(name_list):
 				# 	writefeatures(each, [float(0.1)])
 				# else:
 				writefeatures(each, [float(float(len(lines_f[0].split(",")))/float(kk))])
+=======
+		writefeatures(each, [math.log(len(lines_f[0].split(",")))])
+		# print 111111
+		kk = get_length(each)
+		print kk
+		# break
+		os.system("rm ast.txt")
+		lines = lines_f[0].split(",")
+		for i in range(0,len(lines)):
+			for k in key_word:
+				lines.count(k)
+				if len(lines_f[0].split(",")) == 0:
+					writefeatures(each, [math.log(float(1))])
+				else:
+					# print kk 
+					# print len(lines_f[0].split(","))
+					# if kk > len(lines_f[0].split(",")):
+					# 	writefeatures(each, [float(0.1)])
+					# else:
+					writefeatures(each, [float(len(lines_f[0].split(","))/kk)])
+>>>>>>> ningfei
 
 
 
