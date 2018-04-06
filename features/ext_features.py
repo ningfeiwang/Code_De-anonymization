@@ -497,7 +497,6 @@ def ast_nodenums(name_list):
 		# print len(lines_f[0].split(","))
 		# print math.log(len(lines_f[0].split(",")))
 		# print len(lines_f[0].split(","))
-<<<<<<< HEAD
 		writefeatures(each, [math.log(float(len(lines_f[0].split(","))))])
 		# print 111111
 		kk = get_length(each)
@@ -517,27 +516,104 @@ def ast_nodenums(name_list):
 				# 	writefeatures(each, [float(0.1)])
 				# else:
 				writefeatures(each, [float(float(len(lines_f[0].split(",")))/float(kk))])
-=======
-		writefeatures(each, [math.log(len(lines_f[0].split(",")))])
-		# print 111111
-		kk = get_length(each)
-		print kk
-		# break
-		os.system("rm ast.txt")
-		lines = lines_f[0].split(",")
-		for i in range(0,len(lines)):
-			for k in key_word:
-				lines.count(k)
-				if len(lines_f[0].split(",")) == 0:
-					writefeatures(each, [math.log(float(1))])
+
+def len_parAfor(name_list):
+	if "training" in path:
+		print "training ast node nums"
+	if "testing" in path:
+		print "testing ast node nums"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		l = 0
+		p = 0
+		for i in range(0, len(lines_f)):
+			if "for" in lines_f[i]:
+				line = lines_f[i].split()
+				for k in range (0,len(line)):
+					if line[k] == "for":
+						break
+				p += 1
+				if k+1 == len(line):
+					continue
 				else:
-					# print kk 
-					# print len(lines_f[0].split(","))
-					# if kk > len(lines_f[0].split(",")):
-					# 	writefeatures(each, [float(0.1)])
-					# else:
-					writefeatures(each, [float(len(lines_f[0].split(","))/kk)])
->>>>>>> ningfei
+					l += len(line[k+1])
+		if p == 0:
+			# print p
+			writefeatures(each,[float(0)])
+		else:
+			# print float(float(l)/p)
+			writefeatures(each,[float(float(l)/p)])
+
+
+
+def ifforinline(name_list):
+	# pass
+	if "training" in path:
+		print "training ast node nums"
+	if "testing" in path:
+		print "testing ast node nums"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		# flag = 0
+		l = 0
+		k = 0
+		for i in range(0, len(lines_f)):
+			if "for" in lines_f[i]:
+				line = lines_f[i].split()
+				if "for" != line[0]:
+					l += 1
+					# l = 0
+			k += 1
+		# print float(float(l)/k)
+		writefeatures(each,[float(float(l)/k)])
+
+
+
+def xhxuse(name_list):
+	if "training" in path:
+		print "training ast node nums"
+	if "testing" in path:
+		print "testing ast node nums"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		l = 0
+		k = 0
+		flag = 0
+		for i in range(0, len(lines_f)):
+			if "for" in lines_f[i]:
+				# pass
+				line = lines_f[i].split()
+				for kk in range(0, len(line)):
+					if line[kk] == "for":
+						break
+				if kk + 1 == len(line):
+					continue
+				if "_" in line[kk+1]:
+					l += 1
+					flag = 1
+			k += 1
+		# print float(float(l)/k)
+		writefeatures(each,[float(float(l)/k), float(flag)])
+
+
 
 
 
@@ -567,4 +643,6 @@ if __name__ == '__main__':
 		test_function(name_list)
 		tab_spa(name_list)
 		ast_nodenums(name_list)
-		
+		len_parAfor(name_list)
+		ifforinline(name_list)
+		xhxuse(name_list)
