@@ -137,12 +137,12 @@ def nums_function(name_list):
 	for each in name_list:
 		process_bar.show_process()
 		data = readfile(os.path.join(path,each))
-		nums[each] = data.count("def")
+		nums[each] = [data.count("def"),data.count("class")]
 		# print nums
-		if nums[each] != 0:
-			writefeatures(each,[math.log(float(nums[each]))])
+		if nums[each][0] != 0:
+			writefeatures(each,[math.log(float(nums[each][0])),float(nums[each][1])])
 		else:
-			writefeatures(each,[float(nums[each])])
+			writefeatures(each,[float(nums[each][0]),float(nums[each][1])])
 
 def nums_lenline(name_list):
 	lenline = {}
@@ -613,6 +613,49 @@ def xhxuse(name_list):
 		# print float(float(l)/k)
 		writefeatures(each,[float(float(l)/k), float(flag)])
 
+def lower_chars(string):
+	return sum(map(str.islower, string))
+
+def upper_chars(string):
+	return sum(map(str.isupper, string))
+
+def get_par(name_list):
+	if "training" in path:
+		print "training par"
+	if "testing" in path:
+		print "testing par"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		try:
+			root = ast.parse(open(os.path.join(path,each)).read())
+		except:
+			writefeatures(each, [float(0),float(0),float(0),float(0), float(0)]) #big first, big num and _ nums, li nums
+			continue
+
+		names = sorted({node.id for node in ast.walk(root) if isinstance(node, ast.Name)})
+		big_num = 0
+		un_num = 0
+		big_fir = 0
+		low_num = 0
+		str_fir = 0
+		if len(names) == 0:
+			writefeatures(each, [float(0),float(0),float(0),float(0), float(0)]) #big first, big num and _ nums, li nums
+			continue
+		for i in range(0, len(names)):
+			un_num += names[i].count("_")
+			big_num += upper_chars(names[i])
+			low_num += lower_chars(names[i])
+			if names[i][0].isupper():
+				big_fir += 1
+			elif names[i][0].islower():
+				pass
+			else:
+				str_fir += 1
+
+		writefeatures(each, [float(float(big_num)/float(len(names))),float(float(un_num)/float(len(names))),float(float(big_fir)/float(len(names))),float(float(low_num)/float(len(names))),float(float(str_fir)/float(len(names)))])
 
 
 
@@ -646,3 +689,4 @@ if __name__ == '__main__':
 		len_parAfor(name_list)
 		ifforinline(name_list)
 		xhxuse(name_list)
+		get_par(name_list)
