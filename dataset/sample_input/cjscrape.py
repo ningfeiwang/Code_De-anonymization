@@ -39,7 +39,7 @@ def writefile(filename, content):
 
 
 def craw(year, competition_id, problems):
-    for i in range(0, len(problems)+1):
+    for i in range(0, len(problems)):
 
         url = get_download_url(competition_id, i)
         print url   
@@ -48,11 +48,15 @@ def craw(year, competition_id, problems):
         # print driver.page_source
         driver.get(url)
         time.sleep(4)
-        path = '//*[@id="dsb-problem-content-div' + str(i) + ']/div/table/tbody/tr[2]/td[1]/code'
+        path = '//*[@id="dsb-problem-content-div' + str(i) + '"]/div/table/tbody/tr[2]/td[1]/code'
         print path
-        a = driver.find_elements_by_xpath('//*[@id="dsb-problem-content-div' + str(i) + '"]/div/table/tbody/tr[2]/td[1]/code')
-        # driver.close()
-        print a[0].text
+        a = driver.find_elements_by_xpath(path)
+        # driver.quit()
+        # print a[0].text
+        name = problems[i]["id"] + ".txt"
+        writefile(name, a[0].text)
+
+        driver.quit()
         # //*[@id="dsb-problem-content-div1"]/div/table/tbody/tr[2]/td[1]/code
         # if i == 1:
         #     break
@@ -76,9 +80,9 @@ if __name__ == '__main__':
 
         # print year
         # print round_id
-        # print len(problems)
+        # print problems[1]["id"]
         craw(year, round_id, problems)
-        break
+        # break
 
             # run scraper on current round
             # scraper = multiprocessing.Process(target=scrape, args=(round_id, problems, script_path))
