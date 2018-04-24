@@ -81,7 +81,7 @@ if __name__ == '__main__':
         # print year
         # print round_id
         # print problems[1]["id"]
-        craw(year, round_id, problems)
+            craw(year, round_id, problems)
         # break
 
             # run scraper on current round
