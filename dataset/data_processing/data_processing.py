@@ -21,27 +21,36 @@ def writefile(filename, data):
 
 if __name__ == '__main__':
 	global path
-	path = "/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/data/data_80k_74"
+	path = "./data"
 	name_list = get_name(path)
+	os.system("mkdir training")
+	os.system("mkdir testing")
 	for each in name_list:
 		if (each == '.DS_Store'):
 			continue
 		
-		filename = get_name(os.path.join(path,each))
-		k_p = os.path.join(path,each)
-		k = 0
-		for file in filename:
-			if (file == '.DS_Store'):
-				continue
-			if k <= 2:
-				name = "testing/" + each + ".py"
-				data = readfile(os.path.join(k_p,file))
-				writefile(name, data)
-				k += 1
-			else:
-				name = "training/" + each + ".py"
-				data = readfile(os.path.join(k_p,file))
-				writefile(name, data)
+		pos = each.split('.py')[0].rfind('_')
+		num = each.split('.py')[0][pos+1:]
+		if (int(num) <= 8) and (int(num) >=6):
+			cmd = "cp ./data/" + each +" ./testing/"
+		else:
+			cmd = "cp ./data/" + each +" ./training/"
+		os.system(cmd)
+		# filename = get_name(os.path.join(path,each))
+		# k_p = os.path.join(path,each)
+		# k = 0
+		# for file in filename:
+		# 	if (file == '.DS_Store'):
+		# 		continue
+		# 	if k <= 2:
+		# 		name = "testing/" + each + ".py"
+		# 		data = readfile(os.path.join(k_p,file))
+		# 		writefile(name, data)
+		# 		k += 1
+		# 	else:
+		# 		name = "training/" + each + ".py"
+		# 		data = readfile(os.path.join(k_p,file))
+		# 		writefile(name, data)
 			# print len(n)
 
 		# data = readfile(os.path.join(path, each))
