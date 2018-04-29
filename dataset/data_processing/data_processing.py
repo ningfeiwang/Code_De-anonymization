@@ -31,7 +31,7 @@ if __name__ == '__main__':
 		
 		pos = each.split('.py')[0].rfind('_')
 		num = each.split('.py')[0][pos+1:]
-		if (int(num) <= 8) and (int(num) >=6):
+		if int(num) <= 2:
 			cmd = "cp ./data/" + each +" ./testing/"
 		else:
 			cmd = "cp ./data/" + each +" ./training/"

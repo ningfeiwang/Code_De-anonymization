@@ -25,7 +25,8 @@ if __name__ == '__main__':
 		if each == ".DS_Store":
 			continue
 		if each.split("_")[1] not in usertrain:
-			cmd = 'rm ./testing/'
+			cmd = 'rm ./testing/' + each
+			os.system(cmd)
 
 
 
