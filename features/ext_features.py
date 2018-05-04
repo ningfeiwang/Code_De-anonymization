@@ -657,14 +657,130 @@ def get_par(name_list):
 
 		writefeatures(each, [float(float(big_num)/float(len(names))),float(float(un_num)/float(len(names))),float(float(big_fir)/float(len(names))),float(float(low_num)/float(len(names))),float(float(str_fir)/float(len(names)))])
 
+# &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& dynamic features
 
+def run_code(name_list):
+	if "training" in path:
+		print "training par"
+	if "testing" in path:
+		print "testing par"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		prob = each.split("_")[0][1:]
+		if "training" in path:
+			cmd = "nohup python -m cProfile " + "./training/" + each + "< ./sample_input/" + prob + ".txt"+ ">./traininglog/" + each + ".txt" + " 2>&1 &"
+			print cmd
+			os.system(cmd)
+			cmd = "rm *.out"
+			os.system(cmd)
+		else:
+			# cmd = "nohup python " + "./testing/" 
+			cmd = "nohup python -m cProfile " + "./testing/" + each + "< ./sample_input/" + prob + ".txt"+ ">./testinglog/" + each + ".txt" + " 2>&1 &"
+			print cmd
+			os.system(cmd)
+			cmd = "rm *.out"
+			os.system(cmd)
+
+		# nohup python3 model_train.py > yeu.log 2>&1 &
+
+def get_callfunnums():
+	if "training" in path:
+		a = "traininglog"
+		print "training par"
+	if "testing" in path:
+		a = "testinglog"
+		print "testing par"
+
+	p = "./"+a
+	name_list = get_name(p)
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		name = each.split(".txt")[0]
+		p = "./" + a +"/"+ each
+		f = open(p,'r')
+		lines_f = f.readlines()
+		f.close()
+		module_time = 0
+		calls = 0
+		times = 0
+		abo_100 = 0
+		abo_50 = 0
+		abo_10 = 0
+		equ_1 = 0
+		flag = 0
+		mul_num = 0
+		for line in lines_f:
+			try:
+				# if "function calls" in line:
+					# calls = line.split()[0]
+				if "function calls" in line:
+					for i in range(0,len(line.split())-1):
+						if line.split()[i] == 'function':
+							if line.split()[i+1] == "calls":
+								calls = line.split()[i-1]
+					# calls = line.split()[0]
+					times = line.split()[-2]
+				else:
+					if line.split()[0] == "ncalls":
+						flag = 1
+						continue
+				if flag == 1:
+					if int(line.split()[0]) >= 100:
+						abo_100 += 1
+					elif int(line.split()[0]) >= 50:
+						abo_50 += 1
+					elif int(line.split()[0]) >= 10:
+						abo_10 += 1
+					else:
+						if int(line.split()[0]) == 1:
+							equ_1 += 1
+
+				if "<module>" in line:
+					mul_num += 1
+					module_time += line.split()[3]
+			except:
+				continue
+		if mul_num != 0:
+			module_time = float(module_time) / float(mul_num)
+		if calls == 0:
+
+			writefeatures(each.split(".txt")[0],[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+		else:
+			writefeatures(each.split(".txt")[0],[float(math.log(float(calls))),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+				# input-content label-is-hidden style-scope paper-input-container
+
+ 	# 489 function calls in 0.006 seconds
+
+  #  Ordered by: standard name
+
+  #  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+  #       1    0.000    0.000    0.000    0.000 StringIO.py:30(<module>)
+  #       1    0.000    0.000    0.000    0.000 StringIO.py:42(StringIO)
+  #       1    0.000    0.000    0.000    0.000 UserDict.py:4(__init__)
+  #       1    0.000    0.000    0.000    0.000 __init__.py:1010(Manager)
+  #       1    0.000    0.000    0.000    0.000 __init__.py:1015(__init__)
+  #       1    0.000    0.000    0.000    0.000 __init__.py:1112(Logger)
+  #       1    0.000    0.000    0.000    0.000 __init__.py:1127(__init__)
+  #       1    0.000    0.000    0.000    0.000 __init__.py:1139(setLevel)
+  #       1    0.000    0.000    0.000    0.000 __init__.py:1298(addHandler)
 
 
 if __name__ == '__main__':
+	os.system("rm -rf trainingfeature")
+	os.system("rm -rf testingfeature")
+	# os.system("rm -rf traininglog")
+	# os.system("rm -rf testinglog")
 	global path
 	os.system("mkdir trainingfeature")
 	os.system("mkdir testingfeature")
-	
+	# os.system("mkdir traininglog")
+	# os.system("mkdir testinglog")
 	for i in range(0,2):
 		if i == 0:
 			path = "./testing"
@@ -690,3 +806,7 @@ if __name__ == '__main__':
 		ifforinline(name_list)
 		xhxuse(name_list)
 		get_par(name_list)
+# &&&&&&&&&&&&&&&&&&&&&&&&&&&dynamic
+		# run_code(name_list)
+		get_callfunnums()
+

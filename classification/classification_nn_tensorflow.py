@@ -42,13 +42,13 @@ def get_data(path, x, y, label):
 			# trainx.append()
 		if l == ori:
 			x.append(data)
-			a = each.split("_")[0]
+			a = each.split("_")[1]
 			y.append([label[a]])
 	# print len(x)
 	# print y
 		# print data
 def main(X_train, y_train, X_test, y_test):
-	num_classes = 75
+	num_classes = 37
 	# 		X_train[i][j] = int(X_train[i][j])
 	# for i in range(0,len(X_test)):
 	# 	for j in range(0,len(X_test[0])):
@@ -57,8 +57,8 @@ def main(X_train, y_train, X_test, y_test):
 	X_test = np.array(X_test)
 	# y_train = np.array(y_train)
 	# y_test = np.array(y_test)
-	y_train = np_utils.to_categorical(y_train,75)
-	y_test = np_utils.to_categorical(y_test,75)
+	y_train = np_utils.to_categorical(y_train,37)
+	y_test = np_utils.to_categorical(y_test,37)
 	# one hot encode outputs
 	# y_train = np_utils.to_categorical(y_train,num_classes)
 	# y_test = np_utils.to_categorical(y_test,num_classes)
@@ -110,7 +110,7 @@ if __name__ == '__main__':
 	for i in range(0,len(name_list)):
 		if name_list[i] == ".DS_Store":
 			continue
-		a = name_list[i].split("_")[0]
+		a = name_list[i].split("_")[1]
 		if a in label.keys():
 			continue
 
