@@ -715,6 +715,13 @@ def get_callfunnums():
 		equ_1 = 0
 		flag = 0
 		mul_num = 0
+		content = readfile(p)
+		if "error" in content:
+			writefeatures(each.split(".txt")[0],[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+			continue
+		if "Error" in content:
+			writefeatures(each.split(".txt")[0],[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+			continue
 		for line in lines_f:
 			try:
 				# if "function calls" in line:
