@@ -26,7 +26,7 @@ def get_length(filename):
 	return len(lines_f)
 
 def writefeatures(label,features):
-	name = label.split(".")[0] + ".txt"
+	name = label.split(".txt")[0] + ".txt"
 	if "training" in path:
 		f = open(os.path.join("trainingfeature",name), 'a')
 	if "testing" in path:
@@ -717,10 +717,10 @@ def get_callfunnums():
 		mul_num = 0
 		content = readfile(p)
 		if "error" in content:
-			writefeatures(each.split(".txt")[0],[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+			writefeatures(each,[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
 			continue
 		if "Error" in content:
-			writefeatures(each.split(".txt")[0],[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+			writefeatures(each,[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
 			continue
 		for line in lines_f:
 			try:
@@ -757,9 +757,9 @@ def get_callfunnums():
 			module_time = float(module_time) / float(mul_num)
 		if calls == 0:
 
-			writefeatures(each.split(".txt")[0],[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+			writefeatures(each,[float(calls),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
 		else:
-			writefeatures(each.split(".txt")[0],[float(math.log(float(calls))),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
+			writefeatures(each,[float(math.log(float(calls))),float(times),float(abo_100),float(abo_50),float(abo_10),float(equ_1),float(module_time)])
 				# input-content label-is-hidden style-scope paper-input-container
 
  	# 489 function calls in 0.006 seconds
