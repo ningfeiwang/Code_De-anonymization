@@ -776,6 +776,35 @@ def get_callfunnums():
   #       1    0.000    0.000    0.000    0.000 __init__.py:1127(__init__)
   #       1    0.000    0.000    0.000    0.000 __init__.py:1139(setLevel)
   #       1    0.000    0.000    0.000    0.000 __init__.py:1298(addHandler)
+def run_memcode(name_list):
+	os.system("rm -rf trainingmemlog")
+	os.system("rm -rf testingmemlog")
+	os.system("mkdir trainingmemlog")
+	os.system("mkdir testingmemlog")
+	if "training" in path:
+		print "training run mem"
+	if "testing" in path:
+		print "testing run mem"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		prob = each.split("_")[0][1:]
+# python -m memory_profiler ShowProcess.py
+		if "training" in path:
+			cmd = "nohup python -m memory_profiler " + "./training/" + each + "< ./sample_input/" + prob + ".txt"+ ">./trainingmemlog/" + each + ".txt" + " 2>&1 &"
+			print cmd
+			os.system(cmd)
+			# cmd = "rm *.out"
+			# os.system(cmd)
+		else:
+			# cmd = "nohup python " + "./testing/" 
+			cmd = "nohup python -m cProfile " + "./testing/" + each + "< ./sample_input/" + prob + ".txt"+ ">./testingmemlog/" + each + ".txt" + " 2>&1 &"
+			print cmd
+			os.system(cmd)
+			# cmd = "rm *.out"
+			# os.system(cmd)
 
 
 if __name__ == '__main__':
