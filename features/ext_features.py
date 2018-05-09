@@ -796,11 +796,16 @@ def run_memcode(name_list):
 			cmd = "nohup python -m memory_profiler " + "./training/" + each + "< ./sample_input/" + prob + ".txt"+ ">./trainingmemlog/" + each + ".txt" + " 2>&1 &"
 			print cmd
 			os.system(cmd)
+			cmd = "echo $!"
+			a = os.system(cmd)
+			time.sleep(3)
+			cmd = "kill -9 " + a
+			os.system(cmd)
 			# cmd = "rm *.out"
 			# os.system(cmd)
 		else:
 			# cmd = "nohup python " + "./testing/" 
-			cmd = "nohup python -m cProfile " + "./testing/" + each + "< ./sample_input/" + prob + ".txt"+ ">./testingmemlog/" + each + ".txt" + " 2>&1 &"
+			cmd = "nohup python -m memory_profiler " + "./testing/" + each + "< ./sample_input/" + prob + ".txt"+ ">./testingmemlog/" + each + ".txt" + " 2>&1 &"
 			print cmd
 			os.system(cmd)
 			# cmd = "rm *.out"
@@ -822,27 +827,37 @@ if __name__ == '__main__':
 			path = "./testing"
 		else:
 			path = "./training"
-		name_list = get_name(path)
-		keywords(name_list)
-		# detect_lang(name_list)
-		nums_function(name_list)
-		nums_lenline(name_list)
-		comment_len(name_list)
-		check_space(name_list)
-		par_nums(name_list)
-		empty_line(name_list)
-		import_num(name_list)
-		from_import(name_list)
-		coding(name_list)
-		print_sty(name_list)
-		test_function(name_list)
-		tab_spa(name_list)
-		ast_nodenums(name_list)
-		len_parAfor(name_list)
-		ifforinline(name_list)
-		xhxuse(name_list)
-		get_par(name_list)
-# &&&&&&&&&&&&&&&&&&&&&&&&&&&dynamic
-		# run_code(name_list)
-		get_callfunnums()
-
+		# name_list = get_name(path)
+		# f = open('./trainingname.txt','r')
+		# lines_f = f.readlines()
+		# f.close()
+		# j = 0
+		# name_list = []
+		# for kkk in lines_f:
+		# 	if j > 500:
+		# 		continue
+		# 	name_list.append(kkk)
+		# 	j += 1
+# 		keywords(name_list)
+# 		# detect_lang(name_list)
+# 		nums_function(name_list)
+# 		nums_lenline(name_list)
+# 		comment_len(name_list)
+# 		check_space(name_list)
+# 		par_nums(name_list)
+# 		empty_line(name_list)
+# 		import_num(name_list)
+# 		from_import(name_list)
+# 		coding(name_list)
+# 		print_sty(name_list)
+# 		test_function(name_list)
+# 		tab_spa(name_list)
+# 		ast_nodenums(name_list)
+# 		len_parAfor(name_list)
+# 		ifforinline(name_list)
+# 		xhxuse(name_list)
+# 		get_par(name_list)
+# # &&&&&&&&&&&&&&&&&&&&&&&&&&&dynamic
+# 		# run_code(name_list)
+# 		get_callfunnums()
+		run_memcode(name_list)
