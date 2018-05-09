@@ -812,6 +812,51 @@ def run_memcode(name_list):
 			# os.system(cmd)
 
 
+# Line #    Mem usage    Increment   Line Contents
+# ================================================
+#     35   32.594 MiB    0.000 MiB   @profile
+#     36                             def main():
+#     37   32.594 MiB    0.000 MiB       if len(sys.argv) > 1:
+#     38                                     return doit()
+#     39
+#     40   32.594 MiB    0.000 MiB       compileIfNeeded()
+
+
+def mem_fea(name_list):
+	if "training" in path:
+		a = "trainingmemlog"
+		print "training par"
+	if "testing" in path:
+		a = "testingmemlog"
+		print "testing par"
+	p = "./"+a
+	name_list = get_name(p)
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		name = each.split(".txt")[0]
+		p = "./" + a +"/"+ each
+		f = open(p,'r')
+		lines_f = f.readlines()
+		f.close()
+		num = 0
+		mem = 0
+		for k in range(0, len(lines_f)):
+			if "@profile" in lines_f[k]:
+				mem += lines_f[k].split()[1]
+				num += 1
+
+		if mem == 0:
+			writefeatures(each,[float(mem)])
+		elif num = 0:
+			writefeatures(each,[float(num)])
+		else:
+			writefeatures(each,[float(math.log(float(mem)/float(num)))])
+				# input-content label-is-hidden style-scope paper-input-container
+
+
 if __name__ == '__main__':
 	os.system("rm -rf trainingfeature")
 	os.system("rm -rf testingfeature")
@@ -827,7 +872,7 @@ if __name__ == '__main__':
 			path = "./testing"
 		else:
 			path = "./training"
-		# name_list = get_name(path)
+		name_list = get_name(path)
 		# f = open('./trainingname.txt','r')
 		# lines_f = f.readlines()
 		# f.close()
@@ -838,26 +883,27 @@ if __name__ == '__main__':
 		# 		continue
 		# 	name_list.append(kkk)
 		# 	j += 1
-# 		keywords(name_list)
-# 		# detect_lang(name_list)
-# 		nums_function(name_list)
-# 		nums_lenline(name_list)
-# 		comment_len(name_list)
-# 		check_space(name_list)
-# 		par_nums(name_list)
-# 		empty_line(name_list)
-# 		import_num(name_list)
-# 		from_import(name_list)
-# 		coding(name_list)
-# 		print_sty(name_list)
-# 		test_function(name_list)
-# 		tab_spa(name_list)
-# 		ast_nodenums(name_list)
-# 		len_parAfor(name_list)
-# 		ifforinline(name_list)
-# 		xhxuse(name_list)
-# 		get_par(name_list)
-# # &&&&&&&&&&&&&&&&&&&&&&&&&&&dynamic
-# 		# run_code(name_list)
-# 		get_callfunnums()
-		run_memcode(name_list)
+		keywords(name_list)
+		# detect_lang(name_list)
+		nums_function(name_list)
+		nums_lenline(name_list)
+		comment_len(name_list)
+		check_space(name_list)
+		par_nums(name_list)
+		empty_line(name_list)
+		import_num(name_list)
+		from_import(name_list)
+		coding(name_list)
+		print_sty(name_list)
+		test_function(name_list)
+		tab_spa(name_list)
+		ast_nodenums(name_list)
+		len_parAfor(name_list)
+		ifforinline(name_list)
+		xhxuse(name_list)
+		get_par(name_list)
+# &&&&&&&&&&&&&&&&&&&&&&&&&&&dynamic
+		# run_code(name_list)
+		get_callfunnums()
+		# run_memcode(name_list)
+		mem_fea(name_list)
