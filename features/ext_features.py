@@ -657,6 +657,56 @@ def get_par(name_list):
 
 		writefeatures(each, [float(float(big_num)/float(len(names))),float(float(un_num)/float(len(names))),float(float(big_fir)/float(len(names))),float(float(low_num)/float(len(names))),float(float(str_fir)/float(len(names)))])
 
+def len_fun(name_list):
+	# nums = {}
+	if "training" in path:
+		print "training len function"
+	if "testing" in path:
+		print "testing len function"
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		num = 0
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		data = readfile(os.path.join(path,each))
+		num = data.count("def")
+		f = open(os.path.join(path,each),'r')
+		lines_f = f.readlines()
+		f.close()
+		j = 0
+		len_fun = 0
+		flag = 0
+		for i in range(0, len(lines_f)):
+			if "def" in lines_f[i]:
+				j += 1
+				flag = 1
+			if j >= num:
+				flag = 0
+			if flag == 1:
+				len_fun += 1
+
+		if len_fun == 0:
+			writefeatures(each, [float(0)])
+		elif num == 0:
+			writefeatures(each, [float(0)])
+		else:
+			writefeatures(each, [float(math.log(float(len_fun)/float(num)))])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& dynamic features
 
 def run_code(name_list):
@@ -822,7 +872,7 @@ def run_memcode(name_list):
 #     40   32.594 MiB    0.000 MiB       compileIfNeeded()
 
 
-def mem_fea(name_list):
+def mem_fea():
 	if "training" in path:
 		a = "trainingmemlog"
 		print "training par"
@@ -842,15 +892,28 @@ def mem_fea(name_list):
 		lines_f = f.readlines()
 		f.close()
 		num = 0
-		mem = 0
+		mem = 0.0
+		#                 mem = 0.0
+  #               for k in range(0, len(lines_f)):
+  #                       if "@profile" in lines_f[k]:
+  #                               try:
+  #                                   mem += float(lines_f[k].split()[1])
+  #                                   num += 1
+  #                               except:
+  #                                   continue
+
+  #               if mem == 0.0:
 		for k in range(0, len(lines_f)):
 			if "@profile" in lines_f[k]:
-				mem += lines_f[k].split()[1]
-				num += 1
+				try:
+					mem += float(lines_f[k].split()[1])
+					num += 1
+				except:
+					continue
 
-		if mem == 0:
+		if mem == 0.0:
 			writefeatures(each,[float(mem)])
-		elif num = 0:
+		elif num == 0:
 			writefeatures(each,[float(num)])
 		else:
 			writefeatures(each,[float(math.log(float(mem)/float(num)))])
@@ -902,8 +965,9 @@ if __name__ == '__main__':
 		ifforinline(name_list)
 		xhxuse(name_list)
 		get_par(name_list)
+		len_fun(name_list)
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&dynamic
 		# run_code(name_list)
 		get_callfunnums()
 		# run_memcode(name_list)
-		mem_fea(name_list)
+		mem_fea()
