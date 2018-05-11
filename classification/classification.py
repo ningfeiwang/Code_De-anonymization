@@ -58,8 +58,8 @@ def get_data(path, x, y, label):
 if __name__ == '__main__':
 	# global testx, testy, trainx,trainy
 	# global path_train, path_test
-	path_train = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/trainingfeature'
-	path_test = '/Users/ningfeiwang/Documents/spring2018/cse498_info_privacy/project/Code_De-anonymization/dataset/classification/testingfeature'
+	path_train = './trainingfeature'
+	path_test = './testingfeature'
 	testx = []
 	testy = []
 	trainx = []
