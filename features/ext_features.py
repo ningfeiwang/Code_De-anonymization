@@ -75,7 +75,7 @@ def keywords(name_list):
 				fea[k] = math.log(float(float(l)/float(fea[k])))
 		list_fea = []
 		for k in key_word:
-			list_fea.append(fea[k])
+			list_fea.append(float(fea[k]))
 		writefeatures(each,list_fea)
 
 def detect_lang(name_list):
@@ -846,11 +846,11 @@ def run_memcode(name_list):
 			cmd = "nohup python -m memory_profiler " + "./training/" + each + "< ./sample_input/" + prob + ".txt"+ ">./trainingmemlog/" + each + ".txt" + " 2>&1 &"
 			print cmd
 			os.system(cmd)
-			cmd = "echo $!"
-			a = os.system(cmd)
-			time.sleep(3)
-			cmd = "kill -9 " + a
-			os.system(cmd)
+			# cmd = "echo $!"
+			# a = os.system(cmd)
+			# time.sleep(3)
+			# cmd = "kill -9 " + a
+			# os.system(cmd)
 			# cmd = "rm *.out"
 			# os.system(cmd)
 		else:
@@ -919,6 +919,64 @@ def mem_fea():
 			writefeatures(each,[float(math.log(float(mem)/float(num)))])
 				# input-content label-is-hidden style-scope paper-input-container
 
+def mem_val():
+	if "training" in path:
+		a = "trainingdis"
+		print "training dis"
+	if "testing" in path:
+		a = "testingdis"
+		print "testing dis"
+	p = "./"+a
+	name_list = get_name(p)
+	process_bar = ShowProcess(len(name_list)-1)
+	for each in name_list:
+		process_bar.show_process()
+		if each == ".DS_Store":
+			continue
+		name = each.split(".txt")[0]
+		p = "./" + a +"/"+ each
+		f = open(p,'r')
+		lines_f = f.readlines()
+		f.close()
+		tmp = []
+		for i in range(0,len(lines_f)):
+			if "STORE_NAME" in lines_f[i]:
+				tmp.append([lines_f[i].split()[2],lines_f[i].split()[3]])
+		if len(tmp) == 0:
+			writefeatures(each,[float(len(tmp)),float(len(tmp)),float(len(tmp)),float(len(tmp)),float(len(tmp)),float(len(tmp)),float(len(tmp)),float(len(tmp))])
+			continue
+		temp = dict()
+		for i in range(0, len(tmp)):
+			if tmp[i][0] in temp.keys():
+				temp[tmp[i][0]].append(tmp[i][1])
+			else:
+				temp[tmp[i][0]] = [tmp[i][1]]
+		dis_mem = len(temp.keys())
+		max_num = 0
+		min_num = 1000
+		ave = 0.0
+		sum_num = 0
+		les_10 = 0
+		abo_10 = 0
+		abo_20 = 0
+		abo_40 = 0
+		for key in temp.keys():
+			sum_num += len(temp[key])
+			if min_num > len(temp[key]):
+				min_num = len(temp[key])
+			if max_num < len(temp[key]):
+				max_num = len(temp[key])
+			if len(temp[key]) < 10:
+				les_10 += 1
+			if len(temp[key]) > 10:
+				abo_10 += 1
+			if len(temp[key]) > 20:
+				abo_20 += 1
+			if len(temp[key]) > 40:
+				abo_40 += 1
+		ave = float(sum_num)/float(len(temp.keys()))
+		writefeatures(each,[float(dis_mem),float(max_num),float(min_num),float(ave),float(les_10),float(abo_10),float(abo_20),float(abo_40)])
+
 
 if __name__ == '__main__':
 	os.system("rm -rf trainingfeature")
@@ -971,3 +1029,4 @@ if __name__ == '__main__':
 		get_callfunnums()
 		# run_memcode(name_list)
 		mem_fea()
+		mem_val()
