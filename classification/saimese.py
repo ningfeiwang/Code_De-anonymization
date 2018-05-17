@@ -10,9 +10,10 @@ from keras.layers import Input, Flatten, Dense, Dropout, Lambda
 from keras.optimizers import RMSprop
 from keras import backend as K
 import os
-
+from keras.callbacks import TensorBoard
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 num_classes = 74
-epochs = 1
+epochs = 10
 
 
 def euclidean_distance(vects):
@@ -42,8 +43,8 @@ def create_pairs(x, y):
     print(np.array(x).shape)
     pairs = []
     labels = []
-    for i in range(len(x)):
-        for j in range(i, len(x)):
+    for i in range(100):
+        for j in range(i, 100):
             
             # print (x)
             # print (np.array(ran1))
@@ -249,10 +250,11 @@ model = Model([input_a, input_b], distance)
 
 # train
 rms = RMSprop()
+tensorboard = TensorBoard(log_dir='log', histogram_freq=0,write_graph=True,write_images=True)
 model.compile(loss=contrastive_loss, optimizer=rms, metrics=[accuracy])
 model.fit([tr_pairs[:, 0], tr_pairs[:, 1]], tr_y,
           batch_size=10,
-          epochs=epochs)
+          validation_split=0.2,epochs=epochs,callbacks=[tensorboard])
 scores = model.evaluate([te_pairs[:, 0], te_pairs[:, 1]], te_y,verbose=0)
 # print (scores)
 # compute final accuracy on training and test sets
