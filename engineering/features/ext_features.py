@@ -482,9 +482,10 @@ def ast_nodenums(name_list):
 		try:
 			tree = ast.parse(open(os.path.join(path,each)).read())
 		except:
-			writefeatures(each, [float(0)])
-			for k in (0,len(key_word)):
-				writefeatures(each, [math.log(float(1))])
+			writefeatures(each, [float(0),math.log(float(1)),math.log(float(1)),math.log(float(1)),math.log(float(1)),math.log(float(1)),math.log(float(1)),math.log(float(1))])
+			# for k in (0,len(key_word)):
+			# 	writefeatures(each, [math.log(float(1))])
+
 			continue
 		x = ast_visit.visit()
 		x.visit(tree)
