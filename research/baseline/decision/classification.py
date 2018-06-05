@@ -52,7 +52,7 @@ def get_data(path, x, y, label):
 			# try:
 			y.append([label[a]])
 			# except:
-				# x.pop()
+			# 	x.pop()
 			# print len(x)
 	# print y
 		# print data
@@ -76,11 +76,13 @@ if __name__ == '__main__':
 		a = name_list[i].split("_")[1]
 		if a in label.keys():
 			continue
-
+		# else:
 		label[a] = p
 		p += 1
+	# print len(label.keys())
 	# print len(label)
 	get_data(path_train, trainx, trainy, label)
+	# print trainx
 	# l1 = ['b','c','d','b','c','a','a']
 	# ll = len(trainx[0])
 	# pp = []
@@ -161,18 +163,28 @@ if __name__ == '__main__':
 	# 	trainx.append([res11[i], res21[i],res31[i],res41[i],res51[i]])
 	# for i in range(0, len(testy)):
 	# 	testx.append([res12[i], res22[i],res32[i],res42[i],res52[i]])
-	# clf6 = model.knn_classifier()
-	clf6,b = model.naive_bayes_classifier()
-	# clf6,b = model.gaussian_bayes_classifier()
+	test = []
+	max_s = 0
+	k = 0
+	for i in range(10,11):
+		clf6 = model.decision_tree_classifier(i)
+		# clf2,b = model.naive_bayes_classifier()
+		# clf3,b = model.gaussian_bayes_classifier()
 
-	# clf6 = VotingClassifier(estimators=[('lr', clf1), ('rf', clf2), ('gnb', clf3)], voting='hard')
-	ins6 = clf6.fit(trainx, trainy)
-	res6 = clf6.predict(testx)
+		# clf6 = VotingClassifier(estimators=[('lr', clf1), ('rf', clf2), ('gnb', clf3)], voting='hard')
+		ins6 = clf6.fit(trainx, trainy)
+		res6 = clf6.predict(testx)
+		test.append(ins6.score(testx,testy))
+		if ins6.score(testx,testy) > max_s:
+			max_s = ins6.score(testx,testy)
+			k = i
 
-
-	print res6
-	print testy
-	print ins6.score(testx,testy)
+	print test
+	print max_s
+	print k
+	# print res6
+	# print testy
+	# print ins6.score(testx,testy)
 
 	# name_train = get_name(path_train)
 	# name_test = get_name(path_test)
