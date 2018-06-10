@@ -978,7 +978,6 @@ def mem_val():
 		ave = float(sum_num)/float(len(temp.keys()))
 		writefeatures(each,[float(dis_mem),float(max_num),float(min_num),float(ave),float(les_10),float(abo_10),float(abo_20),float(abo_40)])
 
-
 if __name__ == '__main__':
 	os.system("rm -rf trainingfeature")
 	os.system("rm -rf testingfeature")
